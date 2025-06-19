@@ -1,1 +1,1 @@
-#import "GeneratedPluginRegistrant.h"
+#import "../../../../../ios/Runner/GeneratedPluginRegistrant.h"
