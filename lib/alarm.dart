@@ -75,12 +75,12 @@ class Alarm {
       if (alarm.dateTime.isAfter(now)) {
         await set(alarmSettings: alarm);
       } else {
-       /* if (await Alarm.isRinging(alarm.id)) {
+        if (await Alarm.isRinging(alarm.id)) {
           _ringing.add(_ringing.value.add(alarm));
           ringStream.add(alarm);
         } else {
           await stop(alarm.id);
-        }*/
+        }
       }
     }
   }

@@ -67,12 +67,14 @@ class AlarmService : Service() {
 
         // Build the notification
         val notificationHandler = NotificationHandler(this)
-        val appIntent =
-            applicationContext.packageManager.getLaunchIntentForPackage(applicationContext.packageName)
-        val pendingIntent = PendingIntent.getActivity(
+        val stopIntent = Intent(this, AlarmService::class.java).apply {
+            putExtra("id", id)
+            putExtra(AlarmReceiver.EXTRA_ALARM_ACTION, "STOP_ALARM")
+        }
+        val pendingIntent = PendingIntent.getService(
             this,
             id,
-            appIntent,
+            stopIntent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
@@ -192,7 +194,10 @@ class AlarmService : Service() {
                 this.stopService(serviceIntent)
                 Log.d(TAG, "Turning off the warning notification.")
             } else {
-                Log.d(TAG, "Keeping the warning notification on because there are other pending alarms.")
+                Log.d(
+                    TAG,
+                    "Keeping the warning notification on because there are other pending alarms."
+                )
             }
         }
 
@@ -209,7 +214,7 @@ class AlarmService : Service() {
         } else {
             Log.d(TAG, "Keeping alarm running as androidStopAlarmOnTermination is false.")
         }
-        
+
         super.onTaskRemoved(rootIntent)
     }
 
@@ -235,7 +240,10 @@ class AlarmService : Service() {
         // Notify the plugin about the alarm being stopped.
         AlarmPlugin.alarmTriggerApi?.alarmStopped(id.toLong()) {
             if (it.isSuccess) {
-                Log.d(TAG, "Alarm stopped notification for $id was processed successfully by Flutter.")
+                Log.d(
+                    TAG,
+                    "Alarm stopped notification for $id was processed successfully by Flutter."
+                )
             } else {
                 Log.d(TAG, "Alarm stopped notification for $id encountered error in Flutter.")
             }
